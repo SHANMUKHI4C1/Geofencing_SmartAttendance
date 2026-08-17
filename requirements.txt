@@ -1,0 +1,11 @@
+Flask==2.3.3
+Flask-Mail==0.9.1
+pymongo==4.5.0
+bcrypt==4.0.1
+pandas==2.1.1
+matplotlib==3.7.2
+qrcode==7.4.2
+Pillow==10.0.1
+requests==2.31.0
+pyngrok==7.0.0
+pytz==2023.3
