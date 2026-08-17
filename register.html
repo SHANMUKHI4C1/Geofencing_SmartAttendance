@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Smart Attendance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .auth-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        
+        .auth-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+        
+        .input-field {
+            padding-left: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+        }
+        
+        .error-message, .success-message {
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-white to-blue-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                <i class="fas fa-user-plus text-2xl text-green-600"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
+            <p class="text-gray-600">Join Smart Attendance System</p>
+        </div>
+
+        <!-- Register Card -->
+        <div class="auth-card p-8">
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 hidden">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <span id="errorText"></span>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            {% if success %}
+            <div class="success-message bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>{{ success }}</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="post" id="registerForm" class="space-y-6">
+                <!-- Username Field -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input name="username" type="text" required
+                               class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                               placeholder="Choose a username">
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input name="email" type="email" required
+                               class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                               placeholder="Enter your email">
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input name="password" type="password" required id="password"
+                               class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                               placeholder="Create a password">
+                    </div>
+                    <!-- Password Strength Indicator -->
+                    <div class="mt-2">
+                        <div class="password-strength bg-gray-200" id="passwordStrength"></div>
+                        <p class="text-xs text-gray-500 mt-1" id="passwordHint">Password should be at least 6 characters</p>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input name="confirm_password" type="password" required id="confirmPassword"
+                               class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                               placeholder="Confirm your password">
+                    </div>
+                    <p class="text-xs mt-1 hidden" id="passwordMatch"></p>
+                </div>
+
+                <!-- Register Button -->
+                <button type="submit" id="registerBtn" class="btn-primary w-full text-white font-semibold py-3 px-6 rounded-lg">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">
+                    Already have an account? 
+                    <a href="/" class="text-green-600 hover:text-green-800 font-medium transition-colors">
+                        Sign in here
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8">
+            <p class="text-sm text-gray-500">© 2024 Smart Attendance System</p>
+        </div>
+    </div>
+
+    <script>
+        const passwordField = document.getElementById('password');
+        const confirmPasswordField = document.getElementById('confirmPassword');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const passwordHint = document.getElementById('passwordHint');
+        const passwordMatch = document.getElementById('passwordMatch');
+        const registerForm = document.getElementById('registerForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        // Password strength checker
+        passwordField.addEventListener('input', function() {
+            const password = this.value;
+            const strength = calculatePasswordStrength(password);
+            
+            updatePasswordStrengthUI(strength);
+            checkPasswordMatch();
+        });
+
+        // Confirm password checker
+        confirmPasswordField.addEventListener('input', checkPasswordMatch);
+
+        function calculatePasswordStrength(password) {
+            let score = 0;
+            if (password.length >= 6) score += 25;
+            if (password.length >= 8) score += 25;
+            if (/[A-Z]/.test(password)) score += 25;
+            if (/[0-9]/.test(password)) score += 25;
+            return score;
+        }
+
+        function updatePasswordStrengthUI(strength) {
+            const colors = {
+                0: '#ef4444',
+                25: '#f97316', 
+                50: '#eab308',
+                75: '#84cc16',
+                100: '#22c55e'
+            };
+            
+            const messages = {
+                0: 'Too weak',
+                25: 'Weak',
+                50: 'Fair', 
+                75: 'Good',
+                100: 'Strong'
+            };
+
+            passwordStrength.style.width = strength + '%';
+            passwordStrength.style.backgroundColor = colors[strength] || colors[0];
+            passwordHint.textContent = messages[strength] || messages[0];
+            passwordHint.style.color = colors[strength] || colors[0];
+        }
+
+        function checkPasswordMatch() {
+            const password = passwordField.value;
+            const confirmPassword = confirmPasswordField.value;
+            
+            if (confirmPassword.length > 0) {
+                if (password === confirmPassword) {
+                    passwordMatch.textContent = '✓ Passwords match';
+                    passwordMatch.className = 'text-xs mt-1 text-green-600';
+                    passwordMatch.classList.remove('hidden');
+                } else {
+                    passwordMatch.textContent = '✗ Passwords do not match';
+                    passwordMatch.className = 'text-xs mt-1 text-red-600';
+                    passwordMatch.classList.remove('hidden');
+                }
+            } else {
+                passwordMatch.classList.add('hidden');
+            }
+        }
+
+        // Form validation
+        registerForm.addEventListener('submit', function(e) {
+            const username = document.querySelector('input[name="username"]').value;
+            const email = document.querySelector('input[name="email"]').value;
+            const password = passwordField.value;
+            const confirmPassword = confirmPasswordField.value;
+            
+            // Validate username
+            if (username.length < 3) {
+                e.preventDefault();
+                showError('Username must be at least 3 characters long');
+                return;
+            }
+            
+            // Validate email format (HTML5 validation backup)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                showError('Please enter a valid email address');
+                return;
+            }
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                showError('Passwords do not match');
+                return;
+            }
+            
+            // Validate password strength
+            if (password.length < 6) {
+                e.preventDefault();
+                showError('Password must be at least 6 characters long');
+                return;
+            }
+        });
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            setTimeout(() => {
+                errorMessage.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
