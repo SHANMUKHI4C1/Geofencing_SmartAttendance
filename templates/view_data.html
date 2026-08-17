@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Records</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .back-link { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="back-link">
+        <a href="/admin">← Back to Admin Dashboard</a>
+    </div>
+    
+    <h2>📊 Attendance Records</h2>
+    
+    {% if records %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Session ID</th>
+                    <th>Date & Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.student }}</td>
+                    <td>{{ record.session }}</td>
+                    <td>{{ record.time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No attendance records found.</p>
+    {% endif %}
+    
+    <br><br>
+    <a href="/heatmap">📊 View Heatmap Analytics</a>
+</body>
+</html>
